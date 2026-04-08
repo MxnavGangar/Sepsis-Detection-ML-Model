@@ -51,28 +51,27 @@ C = {
 
 # ── Fonts ─────────────────────────────────────────────────────────────────────
 F = {
-    "brand":        ("Segoe UI Semibold", 14),
-    "brand_sub":    ("Segoe UI", 9),
-    "nav":          ("Segoe UI Semibold", 11),
-    "nav_sec":      ("Segoe UI Semibold", 9),
-    "topbar_title": ("Segoe UI Semibold", 15),
-    "topbar_sub":   ("Segoe UI", 10),
-    "stat_val":     ("Segoe UI Semibold", 22),
-    "stat_lbl":     ("Segoe UI", 10),
-    "card_title":   ("Segoe UI Semibold", 10),
-    "field_key":    ("Segoe UI Semibold", 12),
-    "field_name":   ("Segoe UI", 10),
-    "field_unit":   ("Segoe UI", 9),
-    "entry":        ("Segoe UI", 13),
-    "verdict":      ("Segoe UI Bold", 20),
-    "verdict_prob": ("Segoe UI Semibold", 13),
-    "verdict_note": ("Segoe UI", 10),
-    "xai_name":     ("Segoe UI Semibold", 11),
-    "xai_val":      ("Segoe UI", 10),
-    "btn_primary":  ("Segoe UI Semibold", 12),
-    "btn_sec":      ("Segoe UI", 11),
-    "log":          ("Consolas", 10),
-    "disclaimer":   ("Segoe UI", 9),
+    "brand":        ("Segoe UI Semibold", 15),
+    "brand_sub":    ("Segoe UI", 11),
+    "nav_sec":      ("Segoe UI Semibold", 11),
+    "topbar_title": ("Segoe UI Semibold", 17),
+    "topbar_sub":   ("Segoe UI", 12),
+    "stat_val":     ("Segoe UI Semibold", 24),
+    "stat_lbl":     ("Segoe UI", 12),
+    "card_title":   ("Segoe UI Semibold", 12),
+    "field_key":    ("Segoe UI Semibold", 14),
+    "field_name":   ("Segoe UI", 12),
+    "field_unit":   ("Segoe UI", 11),
+    "entry":        ("Segoe UI", 14),
+    "verdict":      ("Segoe UI Bold", 22),
+    "verdict_prob": ("Segoe UI Semibold", 15),
+    "verdict_note": ("Segoe UI", 12),
+    "xai_name":     ("Segoe UI Semibold", 13),
+    "xai_val":      ("Segoe UI", 12),
+    "btn_primary":  ("Segoe UI Semibold", 13),
+    "btn_sec":      ("Segoe UI", 12),
+    "log":          ("Consolas", 12),
+    "disclaimer":   ("Segoe UI", 10),
 }
 
 # ── Window ────────────────────────────────────────────────────────────────────
@@ -111,24 +110,30 @@ ctk.CTkLabel(
 # Separator
 Canvas(sidebar, height=1, bg=C["border"], highlightthickness=0).pack(fill="x")
 
-# Nav section
+# Nav section — static section labels (not navigation buttons)
 ctk.CTkLabel(
-    sidebar, text="WORKSPACE",
+    sidebar, text="SECTIONS",
     font=F["nav_sec"], text_color=C["t3"], anchor="w"
-).pack(anchor="w", padx=18, pady=(18, 6))
+).pack(anchor="w", padx=18, pady=(18, 10))
 
-def _nav(label, active=False):
-    bg = C["blue_muted"] if active else "transparent"
-    tc = C["t1"]         if active else C["t_sidebar"]
-    f  = ctk.CTkFrame(sidebar, fg_color=bg, corner_radius=6, height=34)
-    f.pack(fill="x", padx=10, pady=2)
-    f.pack_propagate(False)
-    ctk.CTkLabel(f, text=label, font=F["nav"], text_color=tc, anchor="w").pack(
-        side="left", padx=12)
+def _section_label(label):
+    """Plain text label — not a button, just a section indicator."""
+    row = ctk.CTkFrame(sidebar, fg_color="transparent", height=28)
+    row.pack(fill="x", padx=18, pady=2)
+    row.pack_propagate(False)
+    # Small left dot for visual structure
+    dot = Canvas(row, width=6, height=6, bg=C["sidebar"], highlightthickness=0)
+    dot.pack(side="left", pady=10)
+    dot.create_oval(0, 2, 6, 8, fill=C["t3"], outline="")
+    ctk.CTkLabel(
+        row, text=label,
+        font=("Segoe UI", 12), text_color=C["t2"], anchor="w"
+    ).pack(side="left", padx=(8, 0))
 
-_nav("Patient Analysis", active=True)
-_nav("Risk Assessment")
-_nav("Audit Log")
+_section_label("Patient Parameters")
+_section_label("Risk Assessment")
+_section_label("Contributing Factors")
+_section_label("Audit Log")
 
 # Bottom info
 Canvas(sidebar, height=1, bg=C["border"], highlightthickness=0).pack(
@@ -140,10 +145,10 @@ info_frame.pack(side="bottom", fill="x", padx=12, pady=12)
 for label, val in [("Model", "XGBoost Classifier"),
                    ("Features", "8 inputs + 3 derived")]:
     ctk.CTkLabel(info_frame, text=label,
-                 font=("Segoe UI Semibold", 9), text_color=C["t3"],
+                 font=("Segoe UI Semibold", 11), text_color=C["t3"],
                  anchor="w").pack(anchor="w", padx=12, pady=(8, 0))
     ctk.CTkLabel(info_frame, text=val,
-                 font=("Segoe UI", 10), text_color=C["t2"],
+                 font=("Segoe UI", 12), text_color=C["t2"],
                  anchor="w").pack(anchor="w", padx=12, pady=(0, 4))
 ctk.CTkLabel(info_frame, text="", height=2).pack()  # bottom padding
 
@@ -156,7 +161,7 @@ dot_cv.pack(side="left")
 dot_cv.create_oval(0, 0, 8, 8, fill="#3FB950", outline="")
 
 ctk.CTkLabel(status_row, text="  System Online",
-             font=("Segoe UI", 10), text_color=C["t2"]).pack(side="left")
+             font=("Segoe UI", 12), text_color=C["t2"]).pack(side="left")
 
 # ═════════════════════════════════════════════════════════════════════════════
 #  MAIN AREA
@@ -250,7 +255,7 @@ for i, (title, val, sub, ac_col) in enumerate(STAT_DEFS):
                            text_color=ac_col, anchor="w")
     val_lbl.pack(anchor="w", pady=(2, 0))
 
-    sub_lbl = ctk.CTkLabel(inner, text=sub, font=("Segoe UI", 9),
+    sub_lbl = ctk.CTkLabel(inner, text=sub, font=("Segoe UI", 11),
                            text_color=C["t3"], anchor="w")
     sub_lbl.pack(anchor="w")
 
@@ -362,7 +367,7 @@ for i, (key, (label_text, unit, ref)) in enumerate(feature_info.items()):
     # Ref range
     ctk.CTkLabel(
         cell, text=f"Range: {ref}",
-        font=("Segoe UI", 9), text_color=C["t3"], anchor="w"
+        font=("Segoe UI", 11), text_color=C["t3"], anchor="w"
     ).pack(anchor="w", padx=12, pady=(0, 4))
 
     # Entry
@@ -489,16 +494,16 @@ def _draw_gauge(p):
 
     # Zone labels
     gauge_cv.create_text(cx - r + 16, cy + 20, text="LOW",
-                         font=("Segoe UI", 8), fill=C["green"],  anchor="center")
+                         font=("Segoe UI", 11), fill=C["green"],  anchor="center")
     gauge_cv.create_text(cx,           cy + 26, text="MODERATE",
-                         font=("Segoe UI", 8), fill=C["amber"],  anchor="center")
+                         font=("Segoe UI", 11), fill=C["amber"],  anchor="center")
     gauge_cv.create_text(cx + r - 16, cy + 20, text="HIGH",
-                         font=("Segoe UI", 8), fill=C["red"],    anchor="center")
+                         font=("Segoe UI", 11), fill=C["red"],    anchor="center")
 
     # Probability label inside gauge
     pct_text = f"{p*100:.1f}%" if p > 0.01 else "—"
     gauge_cv.create_text(cx, cy - 36, text=pct_text,
-                         font=("Segoe UI Semibold", 18),
+                         font=("Segoe UI Semibold", 20),
                          fill=C["t1"], anchor="center")
 
 _draw_gauge(0)
@@ -523,11 +528,11 @@ xai_body = make_card(right, "CONTRIBUTING FACTORS")
 
 xai_hdr = ctk.CTkFrame(xai_body, fg_color="transparent")
 xai_hdr.pack(fill="x", padx=14, pady=(10, 4))
-ctk.CTkLabel(xai_hdr, text="Feature",   font=("Segoe UI Semibold", 9),
+ctk.CTkLabel(xai_hdr, text="Feature",   font=("Segoe UI Semibold", 11),
              text_color=C["t3"], width=100, anchor="w").pack(side="left")
-ctk.CTkLabel(xai_hdr, text="Influence", font=("Segoe UI Semibold", 9),
+ctk.CTkLabel(xai_hdr, text="Influence", font=("Segoe UI Semibold", 11),
              text_color=C["t3"]).pack(side="left", expand=True, fill="x", padx=(0, 8))
-ctk.CTkLabel(xai_hdr, text="Score",     font=("Segoe UI Semibold", 9),
+ctk.CTkLabel(xai_hdr, text="Score",     font=("Segoe UI Semibold", 11),
              text_color=C["t3"], width=64, anchor="e").pack(side="right")
 
 Canvas(xai_body, height=1, bg=C["border"], highlightthickness=0).pack(
@@ -570,20 +575,6 @@ def _update_xai(top5):
             bar.configure(progress_color=C["t3"])
             bar.set(0)
             vl.configure(text="")
-
-# ═════════════════════════════════════════════════════════════════════════════
-#  RIGHT — Disclaimer
-# ═════════════════════════════════════════════════════════════════════════════
-disc = ctk.CTkFrame(right, fg_color=C["blue_muted"],
-                    border_color=C["border_light"], border_width=1, corner_radius=8)
-disc.pack(fill="x", pady=(0, 12))
-ctk.CTkLabel(
-    disc,
-    text="This tool provides AI-generated clinical decision support only.\n"
-         "It does not replace professional medical judgement or diagnosis.",
-    font=F["disclaimer"], text_color="#8BBCE8",
-    justify="left", anchor="w", wraplength=340
-).pack(padx=14, pady=10)
 
 # ═════════════════════════════════════════════════════════════════════════════
 #  LOGIC
