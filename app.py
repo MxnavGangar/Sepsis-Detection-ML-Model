@@ -589,9 +589,19 @@ ctk.CTkLabel(
 #  LOGIC
 # ═════════════════════════════════════════════════════════════════════════════
 def _explain(values):
-    imps  = model.feature_importances_
+    # 🔥 FIX: extract actual XGBoost model from calibrated wrapper
+    if hasattr(model, "base_estimator"):
+        base_model = model.base_estimator
+    elif hasattr(model, "estimator"):
+        base_model = model.estimator
+    else:
+        base_model = model
+
+    imps = base_model.feature_importances_
+
     names = ["PRG", "PL", "PR", "SK", "TS", "M11", "BD2", "Age",
              "Glucose×BMI", "Age×BMI", "Glucose×Age"]
+
     return sorted(
         [(names[i], values[i] * imps[i]) for i in range(len(values))],
         key=lambda x: abs(x[1]), reverse=True
